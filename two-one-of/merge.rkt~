@@ -1,0 +1,60 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname merge) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+
+
+; Problem:
+; 
+; Design the function merge. It consumes two lists of numbers, which it assumes are 
+; each sorted in ascending order. It produces a single list of all the numbers, 
+; also sorted in ascending order. 
+; 
+; Your solution should explicitly show the cross product of type comments table, 
+; filled in with the values in each case. Your final function should have a cond 
+; with 3 cases. You can do this simplification using the cross product table by 
+; recognizing that there are subtly equal answers. 
+; 
+; Hint: Think carefully about the values of both lists. You might see a way to 
+; change a cell content so that 2 cells have the same value.
+; 
+
+
+; Data Defintions:
+; ListOfNum is one of:
+; - empty
+; - (cons Number ListOfNum)
+; a list of numbers
+
+(define LS0 empty)
+(define LS1 (cons 1 empty))
+(define LS2 (cons 1 (cons 2 empty)))
+(define LS3 (cons 1 (cons 2 (cons 3 empty))))
+
+#;
+(define (fn-for-lon lon)
+  (cond [(empty? lon) (...)]
+        [else (...
+               (first lon)
+               (fn-for-lon (rest lon)))]))
+
+
+; ListOfNum ListOfNum -> ListOfNum
+; produce a list of nums sorted in ascending order from two lists of nums
+(check-expect (merge empty empty) empty)
+(check-expect (merge empty (list 1 2 3)) (list 1 2 3))
+(check-expect (merge (list 1 2 3) empty) (list 1 2 3))
+(check-expect (merge (list 1 2 3) (list 4 5)) (list 1 2 3 4 5))
+
+
+;(define (merge lona lonb) empty)
+
+
+(define (merge lona lonb)
+  (cond [(empty? lona) lonb]
+        [(empty? lonb) lona]
+        [else
+         (if (<= (first lona) (first lonb))
+                 (cons (first lona)
+                       (merge (rest lona) lonb))
+                 (cons (first lonb)
+                       (merge (rest lonb) lona)))]))
